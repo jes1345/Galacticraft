@@ -12,6 +12,7 @@ import java.util.Map.Entry;
 import micdoodle8.mods.galacticraft.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.blocks.GCBlocks;
+import micdoodle8.mods.galacticraft.core.client.FootprintRenderer;
 import micdoodle8.mods.galacticraft.core.client.fx.EffectHandlerGC;
 import micdoodle8.mods.galacticraft.core.client.gui.screen.InventoryTabGalacticraft;
 import micdoodle8.mods.galacticraft.core.client.model.ModelTier1Rocket;
@@ -114,7 +115,7 @@ public class ClientProxy extends CommonProxy
 	public static EnumRarity galacticraftItem = EnumRarity.common; // EnumHelperClient.addRarity("GCRarity",
 																	// 9,
 																	// "Space");
-
+	
 	private static int renderIdTreasureChest;
 	private static int renderIdTorchUnlit;
 	private static int renderIdBreathableAir;
@@ -123,6 +124,8 @@ public class ClientProxy extends CommonProxy
 	private static int renderIdCraftingTable;
 	private static int renderIdLandingPad;
 	private static int renderIdMachine;
+	
+	public static FootprintRenderer footprintRenderer = new FootprintRenderer();
 
 	public static Map<String, String> capeMap = new HashMap<String, String>();
 
@@ -346,6 +349,11 @@ public class ClientProxy extends CommonProxy
 		}
 
 		return -1;
+	}
+
+	public static void renderFootprints(float partialTicks)
+	{
+		footprintRenderer.renderFootprints(FMLClientHandler.instance().getClient().thePlayer, partialTicks);
 	}
 
 	public static void renderLiquidOverlays(float partialTicks)

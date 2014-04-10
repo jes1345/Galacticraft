@@ -4,9 +4,13 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import micdoodle8.mods.galacticraft.api.recipe.ISchematicPage;
+import micdoodle8.mods.galacticraft.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
+import micdoodle8.mods.galacticraft.core.blocks.GCBlocks;
+import micdoodle8.mods.galacticraft.core.dimension.WorldProviderMoon;
 import micdoodle8.mods.galacticraft.core.event.EventWakePlayer;
 import micdoodle8.mods.galacticraft.core.items.GCItems;
+import micdoodle8.mods.galacticraft.core.proxy.ClientProxy;
 import micdoodle8.mods.galacticraft.core.tick.TickHandlerClient;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityAdvanced;
 import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
@@ -26,6 +30,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Session;
 import net.minecraft.world.World;
@@ -59,6 +64,9 @@ public class GCEntityClientPlayerMP extends EntityClientPlayerMP
 	private ResourceLocation galacticraftCape;
 	private ThreadDownloadImageData galacticraftCapeImageData;
 	public int clientSpaceStationID;
+
+	private double distanceSinceLastStep;
+	private int lastStep;
 
 	public ArrayList<ISchematicPage> unlockedSchematics = new ArrayList<ISchematicPage>();
 
@@ -166,6 +174,58 @@ public class GCEntityClientPlayerMP extends EntityClientPlayerMP
 		}
 
 		super.onLivingUpdate();
+
+		// If the player is on the moon, not airbourne and not riding anything
+		if (this.worldObj != null && this.worldObj.provider instanceof WorldProviderMoon && this.onGround && this.ridingEntity == null)
+		{
+			int iPosX = (int)Math.floor(this.posX);
+			int iPosY = (int)Math.floor(this.posY - 2);
+			int iPosZ = (int)Math.floor(this.posZ);
+			
+			// If the block below is the moon block
+			if (this.worldObj.getBlock(iPosX, iPosY, iPosZ) == GCBlocks.blockMoon)
+			{
+				// And is the correct metadata (moon turf)
+				if (this.worldObj.getBlockMetadata(iPosX, iPosY, iPosZ) == 5)
+				{
+					// If it has been long enough since the last step
+					if (this.distanceSinceLastStep > 0.09)
+					{
+						Vector3 pos = new Vector3(this);
+						// Set the footprint position to the block below and add random number to stop z-fighting
+						pos.y = MathHelper.floor_double(this.posY - 1) + this.rand.nextFloat() / 100.0F;
+						
+						// Adjust footprint to left or right depending on step count
+						switch (this.lastStep)
+						{
+						case 0:
+							pos.translate(new Vector3(Math.sin(Math.toRadians(-this.rotationYaw + 90)) * 0.25, 0, Math.cos(Math.toRadians(-this.rotationYaw + 90)) * 0.25));
+							break;
+						case 1:
+							pos.translate(new Vector3(Math.sin(Math.toRadians(-this.rotationYaw - 90)) * 0.25, 0, Math.cos(Math.toRadians(-this.rotationYaw - 90)) * 0.25));
+							break;
+						}
+						
+						ClientProxy.footprintRenderer.addFootprint(pos, this.rotationYaw);
+						
+						// Increment and cap step counter at 1
+						this.lastStep++;
+						this.lastStep %= 2;
+						this.distanceSinceLastStep = 0;
+					}
+					else
+					{
+						double motionSqrd = (this.motionX * this.motionX + this.motionZ * this.motionZ);
+						
+						// Even when the player is still, motion isn't exactly zero
+						if (motionSqrd > 0.001)
+						{
+							this.distanceSinceLastStep += motionSqrd;
+						}
+					}
+				}
+			}
+		}
 
 		if (!this.onGround && this.lastOnGround)
 		{

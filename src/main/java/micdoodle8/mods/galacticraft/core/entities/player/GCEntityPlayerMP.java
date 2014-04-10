@@ -12,6 +12,7 @@ import micdoodle8.mods.galacticraft.api.event.oxygen.EventSuffocation;
 import micdoodle8.mods.galacticraft.api.prefab.entity.EntityAutoRocket;
 import micdoodle8.mods.galacticraft.api.recipe.ISchematicPage;
 import micdoodle8.mods.galacticraft.api.recipe.SchematicRegistry;
+import micdoodle8.mods.galacticraft.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.api.world.IGalacticraftWorldProvider;
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.blocks.GCBlocks;
@@ -25,12 +26,14 @@ import micdoodle8.mods.galacticraft.core.inventory.InventoryExtended;
 import micdoodle8.mods.galacticraft.core.items.GCItems;
 import micdoodle8.mods.galacticraft.core.network.PacketSimple;
 import micdoodle8.mods.galacticraft.core.network.PacketSimple.EnumSimplePacket;
-import micdoodle8.mods.galacticraft.core.util.EnumColor;
+import micdoodle8.mods.galacticraft.core.tick.TickHandlerServer;
 import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
+import micdoodle8.mods.galacticraft.core.util.EnumColor;
 import micdoodle8.mods.galacticraft.core.util.GCDamageSource;
 import micdoodle8.mods.galacticraft.core.util.OxygenUtil;
 import micdoodle8.mods.galacticraft.core.util.WorldUtil;
 import micdoodle8.mods.galacticraft.core.wrappers.FlagData;
+import micdoodle8.mods.galacticraft.core.wrappers.Footprint;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -104,6 +107,9 @@ public class GCEntityPlayerMP extends EntityPlayerMP
 
 	private int launchAttempts = 0;
 
+	private double distanceSinceLastStep;
+	private int lastStep;
+
 	private boolean usingPlanetSelectionGui;
 
 	private int openPlanetSelectionGuiCooldown;
@@ -115,8 +121,6 @@ public class GCEntityPlayerMP extends EntityPlayerMP
 	private int teleportCooldown;
 
 	private int chatCooldown;
-
-	private int lastStep;
 
 	private double coordsTeleportedFromX;
 	private double coordsTeleportedFromZ;
@@ -222,8 +226,6 @@ public class GCEntityPlayerMP extends EntityPlayerMP
 			this.setTouchedGround(true);
 		}
 
-		this.updateStep();
-
 		if (this.getTeleportCooldown() > 0)
 		{
 			this.setTeleportCooldown(this.getTeleportCooldown() - 1);
@@ -296,8 +298,6 @@ public class GCEntityPlayerMP extends EntityPlayerMP
 			}
 		}
 
-		//
-
 		if (this.getLaunchAttempts() > 0 && this.ridingEntity == null)
 		{
 			this.setLaunchAttempts(0);
@@ -340,100 +340,58 @@ public class GCEntityPlayerMP extends EntityPlayerMP
 		this.lastOnGround = this.onGround;
 	}
 
-	private void updateStep()
+	@Override
+    public void moveEntity(double par1, double par3, double par5)
+    {
+    	super.moveEntity(par1, par3, par5);
+    	this.updateFeet(par1, par5);
+    }
+	
+	private void updateFeet(double motionX, double motionZ)
 	{
-		if (this.worldObj != null && this.worldObj.provider instanceof WorldProviderMoon && !this.isAirBorne && this.ridingEntity == null)
+		double motionSqrd = (motionX * motionX + motionZ * motionZ);
+		
+		// If the player is on the moon, not airbourne and not riding anything
+		if (motionSqrd > 0.001 && this.worldObj != null && this.worldObj.provider instanceof WorldProviderMoon && this.ridingEntity == null)
 		{
-			if (this.worldObj.getBlock(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY - 1), MathHelper.floor_double(this.posZ)) == GCBlocks.blockMoon)
+			int iPosX = (int)Math.floor(this.posX);
+			int iPosY = (int)Math.floor(this.posY - 1);
+			int iPosZ = (int)Math.floor(this.posZ);
+			
+			// If the block below is the moon block
+			if (this.worldObj.getBlock(iPosX, iPosY, iPosZ) == GCBlocks.blockMoon)
 			{
-				if (this.worldObj.getBlockMetadata(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY - 1), MathHelper.floor_double(this.posZ)) == 5)
+				// And is the correct metadata (moon turf)
+				if (this.worldObj.getBlockMetadata(iPosX, iPosY, iPosZ) == 5)
 				{
-					int meta = -1;
-
-					final int i = 1 + MathHelper.floor_double(this.rotationYaw * 8.0F / 360.0F + 0.5D) & 7;
-
-					switch (this.lastStep)
+					// If it has been long enough since the last step
+					if (this.distanceSinceLastStep > 0.35)
 					{
-					case 1:
-						switch (i)
+						Vector3 pos = new Vector3(this);
+						// Set the footprint position to the block below and add random number to stop z-fighting
+						pos.y = MathHelper.floor_double(this.posY - 1) + this.rand.nextFloat() / 100.0F;
+						
+						// Adjust footprint to left or right depending on step count
+						switch (this.lastStep)
 						{
 						case 0:
-							meta = 2;
-							this.worldObj.setBlockMetadataWithNotify(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY - 1), MathHelper.floor_double(this.posZ), meta + 5, 3);
+							pos.translate(new Vector3(Math.sin(Math.toRadians(-this.rotationYaw + 90)) * 0.25, 0, Math.cos(Math.toRadians(-this.rotationYaw + 90)) * 0.25));
 							break;
 						case 1:
-							meta = 4;
-							this.worldObj.setBlockMetadataWithNotify(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY - 1), MathHelper.floor_double(this.posZ), meta + 5, 3);
-							break;
-						case 2:
-							meta = 2;
-							this.worldObj.setBlockMetadataWithNotify(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY - 1), MathHelper.floor_double(this.posZ), meta + 5, 3);
-							break;
-						case 3:
-							meta = 2;
-							this.worldObj.setBlockMetadataWithNotify(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY - 1), MathHelper.floor_double(this.posZ), meta + 5, 3);
-							break;
-						case 4:
-							meta = 2;
-							this.worldObj.setBlockMetadataWithNotify(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY - 1), MathHelper.floor_double(this.posZ), meta + 5, 3);
-							break;
-						case 5:
-							meta = 2;
-							this.worldObj.setBlockMetadataWithNotify(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY - 1), MathHelper.floor_double(this.posZ), meta + 5, 3);
-							break;
-						case 6:
-							meta = 2;
-							this.worldObj.setBlockMetadataWithNotify(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY - 1), MathHelper.floor_double(this.posZ), meta + 5, 3);
-							break;
-						case 7:
-							meta = 2;
-							this.worldObj.setBlockMetadataWithNotify(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY - 1), MathHelper.floor_double(this.posZ), meta + 5, 3);
+							pos.translate(new Vector3(Math.sin(Math.toRadians(-this.rotationYaw - 90)) * 0.25, 0, Math.cos(Math.toRadians(-this.rotationYaw - 90)) * 0.25));
 							break;
 						}
-						this.lastStep = 2;
-						break;
-					case 2:
-						switch (i)
-						{
-						case 0:
-							meta = 1;
-							this.worldObj.setBlockMetadataWithNotify(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY - 1), MathHelper.floor_double(this.posZ), meta + 5, 3);
-							break;
-						case 1:
-							meta = 1;
-							this.worldObj.setBlockMetadataWithNotify(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY - 1), MathHelper.floor_double(this.posZ), meta + 5, 3);
-							break;
-						case 2:
-							meta = 4;
-							this.worldObj.setBlockMetadataWithNotify(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY - 1), MathHelper.floor_double(this.posZ), meta + 5, 3);
-							break;
-						case 3:
-							meta = 4;
-							this.worldObj.setBlockMetadataWithNotify(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY - 1), MathHelper.floor_double(this.posZ), meta + 5, 3);
-							break;
-						case 4:
-							meta = 1;
-							this.worldObj.setBlockMetadataWithNotify(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY - 1), MathHelper.floor_double(this.posZ), meta + 5, 3);
-							break;
-						case 5:
-							meta = 3;
-							this.worldObj.setBlockMetadataWithNotify(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY - 1), MathHelper.floor_double(this.posZ), meta + 5, 3);
-							break;
-						case 6:
-							meta = 2;
-							this.worldObj.setBlockMetadataWithNotify(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY - 1), MathHelper.floor_double(this.posZ), meta + 5, 3);
-							break;
-						case 7:
-							meta = 4;
-							this.worldObj.setBlockMetadataWithNotify(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY - 1), MathHelper.floor_double(this.posZ), meta + 5, 3);
-							break;
-						}
-						this.lastStep = 1;
-						this.worldObj.setBlockMetadataWithNotify(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY - 1), MathHelper.floor_double(this.posZ), meta + 5, 3);
-						break;
-					default:
-						this.lastStep = 1;
-						break;
+						
+						TickHandlerServer.addFootprint(new Footprint(pos, this.rotationYaw), this.worldObj.provider.dimensionId);
+						
+						// Increment and cap step counter at 1
+						this.lastStep++;
+						this.lastStep %= 2;
+						this.distanceSinceLastStep = 0;
+					}
+					else
+					{
+						this.distanceSinceLastStep += motionSqrd;
 					}
 				}
 			}

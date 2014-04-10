@@ -10,6 +10,7 @@ import java.util.Collection;
 import micdoodle8.mods.galacticraft.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.core.util.GCLog;
 import micdoodle8.mods.galacticraft.core.wrappers.FlagData;
+import micdoodle8.mods.galacticraft.core.wrappers.Footprint;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -119,9 +120,23 @@ public class NetworkUtil
 					ByteBufUtils.writeUTF8String(buffer, array[i]);
 				}
 			}
+			else if (dataValue instanceof Footprint[])
+			{
+				Footprint[] array = (Footprint[]) dataValue;
+				buffer.writeInt(array.length);
+
+				for (int i = 0; i < array.length; i++)
+				{
+					buffer.writeFloat((float) array[i].position.x);
+					buffer.writeFloat((float) array[i].position.y + 1);
+					buffer.writeFloat((float) array[i].position.z);
+					buffer.writeFloat((float) array[i].rotation);
+					buffer.writeShort((short) array[i].age);
+				}
+			}
 			else
 			{
-				GCLog.info("Could not find data type to encode!");
+				GCLog.info("Could not find data type to encode!: " + dataValue);
 			}
 		}
 	}
@@ -209,6 +224,15 @@ public class NetworkUtil
 				for (int i = 0; i < size; i++)
 				{
 					objList.add(ByteBufUtils.readUTF8String(buffer));
+				}
+			}
+			else if (clazz.equals(Footprint[].class))
+			{
+				int size = buffer.readInt();
+
+				for (int i = 0; i < size; i++)
+				{
+					objList.add(new Footprint(new Vector3(buffer.readFloat(), buffer.readFloat(), buffer.readFloat()), buffer.readFloat(), buffer.readShort()));
 				}
 			}
 		}

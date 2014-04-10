@@ -22,7 +22,6 @@ import micdoodle8.mods.galacticraft.core.client.gui.container.GuiBuggy;
 import micdoodle8.mods.galacticraft.core.client.gui.container.GuiParachest;
 import micdoodle8.mods.galacticraft.core.client.gui.screen.GuiChoosePlanet;
 import micdoodle8.mods.galacticraft.core.client.gui.screen.GuiGalaxyMap;
-import micdoodle8.mods.galacticraft.core.client.gui.screen.GuiNewSpaceRace;
 import micdoodle8.mods.galacticraft.core.dimension.SpaceRace;
 import micdoodle8.mods.galacticraft.core.dimension.SpaceRaceManager;
 import micdoodle8.mods.galacticraft.core.dimension.SpaceStationSaveData;
@@ -33,16 +32,18 @@ import micdoodle8.mods.galacticraft.core.entities.player.GCEntityPlayerMP.EnumMo
 import micdoodle8.mods.galacticraft.core.inventory.ContainerSchematic;
 import micdoodle8.mods.galacticraft.core.inventory.IInventorySettable;
 import micdoodle8.mods.galacticraft.core.items.ItemParachute;
+import micdoodle8.mods.galacticraft.core.proxy.ClientProxy;
 import micdoodle8.mods.galacticraft.core.tick.KeyHandlerGC;
 import micdoodle8.mods.galacticraft.core.tick.TickHandlerClient;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityAirLockController;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityConductor;
-import micdoodle8.mods.galacticraft.core.util.CoreUtil;
 import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
+import micdoodle8.mods.galacticraft.core.util.CoreUtil;
 import micdoodle8.mods.galacticraft.core.util.GCLog;
 import micdoodle8.mods.galacticraft.core.util.PlayerUtil;
 import micdoodle8.mods.galacticraft.core.util.WorldUtil;
 import micdoodle8.mods.galacticraft.core.wrappers.FlagData;
+import micdoodle8.mods.galacticraft.core.wrappers.Footprint;
 import micdoodle8.mods.galacticraft.core.wrappers.PlayerGearData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
@@ -63,7 +64,6 @@ import net.minecraftforge.common.DimensionManager;
 import org.lwjgl.input.Keyboard;
 
 import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -115,7 +115,8 @@ public class PacketSimple implements IPacket
 		C_OPEN_PARACHEST_GUI(Side.CLIENT, Integer.class, Integer.class, Integer.class),
 		C_UPDATE_WIRE_BOUNDS(Side.CLIENT, Integer.class, Integer.class, Integer.class),
 		C_OPEN_SPACE_RACE_GUI(Side.CLIENT),
-		C_UPDATE_SPACE_RACE_DATA(Side.CLIENT, String.class, FlagData.class, String[].class);
+		C_UPDATE_SPACE_RACE_DATA(Side.CLIENT, String.class, FlagData.class, String[].class),
+		C_UPDATE_FOOTPRINT_LIST(Side.CLIENT, Footprint[].class);
 
 		private Side targetSide;
 		private Class<?>[] decodeAs;
@@ -497,6 +498,13 @@ public class PacketSimple implements IPacket
 			
 			SpaceRaceManager.addSpaceRace(playerList, teamName, flagData);
 			break;
+		case C_UPDATE_FOOTPRINT_LIST:
+			ClientProxy.footprintRenderer.footprints.clear();
+			for (int i = 0; i < this.data.size(); i++)
+			{
+				Footprint print = (Footprint) this.data.get(i);
+				ClientProxy.footprintRenderer.addFootprint(print);
+			}
 		default:
 			break;
 		}
