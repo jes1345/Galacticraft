@@ -91,13 +91,16 @@ public class RoomTreasureMoon extends DungeonRoom
 	{
 		if (!this.chests.isEmpty())
 		{
-			for (int i = 0; i < this.chests.size(); i++)
+			ArrayList<ChunkCoordinates> toRemove = new ArrayList<ChunkCoordinates>();
+			
+			for (ChunkCoordinates coords : new ArrayList<ChunkCoordinates>(this.chests))
 			{
-				ChunkCoordinates coords = this.chests.get(i);
 				this.worldObj.setBlock(coords.posX, coords.posY, coords.posZ, GCBlocks.treasureChestTier1, 0, 3);
 				this.worldObj.setTileEntity(coords.posX, coords.posY, coords.posZ, new TileEntityTreasureChest(1));
-				this.chests.remove(i);
+				toRemove.add(coords);
 			}
+			
+			this.chests.removeAll(toRemove);
 		}
 	}
 }
