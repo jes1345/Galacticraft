@@ -80,11 +80,15 @@ public class PacketDynamic implements IPacket
 		this.type = buffer.readInt();
 		this.dimID = buffer.readInt();
 
-		World world = FMLCommonHandler.instance().getMinecraftServerInstance().worldServerForDimension(this.dimID);
+		World world = null;
 
 		if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
 		{
 			world = FMLClientHandler.instance().getClient().theWorld;
+		}
+		else
+		{
+			world = FMLCommonHandler.instance().getMinecraftServerInstance().worldServerForDimension(this.dimID);
 		}
 
 		switch (this.type)

@@ -72,9 +72,9 @@ import cpw.mods.fml.relauncher.Side;
  */
 public class WorldUtil
 {
-	public static List<Integer> registeredSpaceStations;
-	public static List<Integer> registeredPlanets;
-	public static List<String> registeredPlanetNames;
+	public static List<Integer> registeredSpaceStations = new ArrayList<Integer>();
+	public static List<Integer> registeredPlanets = new ArrayList<Integer>();
+	public static List<String> registeredPlanetNames = new ArrayList<String>();
 
 	public static double getGravityForEntity(Entity eLiving)
 	{
@@ -451,9 +451,6 @@ public class WorldUtil
 		SpaceStationSaveData data = WorldUtil.createSpaceStation(world, newID, player);
 		player.setSpaceStationDimensionID(newID);
 		GalacticraftCore.packetPipeline.sendTo(new PacketSimple(EnumSimplePacket.C_UPDATE_SPACESTATION_CLIENT_ID, new Object[] { newID }), player);
-		// player.playerNetServerHandler.sendPacketToPlayer(PacketUtil.createPacket(GalacticraftCore.CHANNEL,
-		// EnumPacketClient.UPDATE_SPACESTATION_CLIENT_ID, new Object[] { newID
-		// }));
 		return data;
 	}
 
@@ -461,12 +458,12 @@ public class WorldUtil
 	{
 		WorldUtil.registeredSpaceStations.add(dimID);
 		DimensionManager.registerDimension(dimID, ConfigManagerCore.idDimensionOverworldOrbit);
-		WorldUtil.sendSpaceStationList();
+		GalacticraftCore.packetPipeline.sendToAll(new PacketSimple(EnumSimplePacket.C_UPDATE_SPACESTATION_LIST, WorldUtil.getSpaceStationList()));
 		final SpaceStationSaveData var3 = SpaceStationSaveData.getStationData(world, dimID, player);
 		return var3;
 	}
 
-	public static void sendPlanetList()
+	public static List<Object> getPlanetList()
 	{
 		Integer[] iArray = new Integer[WorldUtil.registeredPlanets.size()];
 
@@ -477,11 +474,10 @@ public class WorldUtil
 
 		List<Object> objList = new ArrayList<Object>();
 		objList.add(iArray);
-
-		GalacticraftCore.packetPipeline.sendToAll(new PacketSimple(EnumSimplePacket.C_UPDATE_PLANETS_LIST, objList));
+		return objList;
 	}
 
-	public static void sendSpaceStationList()
+	public static List<Object> getSpaceStationList()
 	{
 		Integer[] iArray = new Integer[WorldUtil.registeredSpaceStations.size()];
 
@@ -492,8 +488,7 @@ public class WorldUtil
 
 		List<Object> objList = new ArrayList<Object>();
 		objList.add(iArray);
-
-		GalacticraftCore.packetPipeline.sendToAll(new PacketSimple(EnumSimplePacket.C_UPDATE_SPACESTATION_LIST, objList));
+		return objList;
 	}
 
 	public static Entity transferEntityToDimension(Entity entity, int dimensionID, WorldServer world)
@@ -505,7 +500,7 @@ public class WorldUtil
 	{
 		if (!world.isRemote)
 		{
-			WorldUtil.sendPlanetList();
+			GalacticraftCore.packetPipeline.sendToAll(new PacketSimple(EnumSimplePacket.C_UPDATE_PLANETS_LIST, WorldUtil.getPlanetList()));
 
 			MinecraftServer mcServer = FMLCommonHandler.instance().getMinecraftServerInstance();
 
