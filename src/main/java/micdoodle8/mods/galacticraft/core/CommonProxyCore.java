@@ -1,6 +1,6 @@
 package micdoodle8.mods.galacticraft.core;
 
-import micdoodle8.mods.galacticraft.api.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.api.world.ICelestialBodyRenderer;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.event.FMLInitializationEvent;

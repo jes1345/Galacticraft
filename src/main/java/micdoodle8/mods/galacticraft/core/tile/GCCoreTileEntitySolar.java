@@ -3,9 +3,9 @@ package micdoodle8.mods.galacticraft.core.tile;
 import java.util.EnumSet;
 import java.util.HashSet;
 
+import universalelectricity.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.api.tile.IDisableableMachine;
 import micdoodle8.mods.galacticraft.api.transmission.core.item.IItemElectric;
-import micdoodle8.mods.galacticraft.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.api.world.IGalacticraftWorldProvider;
 import micdoodle8.mods.galacticraft.api.world.ISolarLevel;
 import micdoodle8.mods.galacticraft.core.GCCoreAnnotations.NetworkedField;

@@ -3,7 +3,7 @@ package micdoodle8.mods.galacticraft.core.world.gen;
 import java.util.List;
 import java.util.Random;
 
-import micdoodle8.mods.galacticraft.api.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.core.blocks.GCCoreBlocks;
 import micdoodle8.mods.galacticraft.core.tile.IMultiBlock;
 import net.minecraft.block.BlockSand;

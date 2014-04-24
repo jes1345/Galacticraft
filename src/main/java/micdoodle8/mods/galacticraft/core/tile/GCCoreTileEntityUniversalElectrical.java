@@ -7,6 +7,7 @@ import ic2.api.item.ISpecialElectricItem;
 import java.lang.reflect.Constructor;
 import java.util.EnumSet;
 
+import universalelectricity.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.api.transmission.ElectricityPack;
 import micdoodle8.mods.galacticraft.api.transmission.NetworkHelper;
 import micdoodle8.mods.galacticraft.api.transmission.NetworkType;
@@ -16,7 +17,6 @@ import micdoodle8.mods.galacticraft.api.transmission.core.item.ElectricItemHelpe
 import micdoodle8.mods.galacticraft.api.transmission.core.item.IItemElectric;
 import micdoodle8.mods.galacticraft.api.transmission.tile.IElectrical;
 import micdoodle8.mods.galacticraft.api.transmission.tile.IElectricalStorage;
-import micdoodle8.mods.galacticraft.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.core.GCCoreAnnotations.NetworkedField;
 import micdoodle8.mods.galacticraft.core.GCCoreAnnotations.RuntimeInterface;
 import micdoodle8.mods.galacticraft.core.GCCoreCompatibilityManager;

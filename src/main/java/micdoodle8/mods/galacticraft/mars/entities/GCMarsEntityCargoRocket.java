@@ -3,10 +3,10 @@ package micdoodle8.mods.galacticraft.mars.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import universalelectricity.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.api.entity.IRocketType;
 import micdoodle8.mods.galacticraft.api.entity.IWorldTransferCallback;
 import micdoodle8.mods.galacticraft.api.prefab.entity.EntityAutoRocket;
-import micdoodle8.mods.galacticraft.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.api.world.IGalacticraftWorldProvider;
 import micdoodle8.mods.galacticraft.core.GCCoreAnnotations.RuntimeInterface;
 import micdoodle8.mods.galacticraft.core.GCCoreConfigManager;

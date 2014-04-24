@@ -2,7 +2,7 @@ package micdoodle8.mods.galacticraft.core.tile;
 
 import java.util.ArrayList;
 
-import micdoodle8.mods.galacticraft.api.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.core.blocks.GCCoreBlocks;
 import net.minecraft.tileentity.TileEntity;
 

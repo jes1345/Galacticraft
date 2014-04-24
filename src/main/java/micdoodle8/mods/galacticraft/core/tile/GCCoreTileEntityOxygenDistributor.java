@@ -2,9 +2,9 @@ package micdoodle8.mods.galacticraft.core.tile;
 
 import java.util.EnumSet;
 
+import universalelectricity.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.api.block.IOxygenReliantBlock;
 import micdoodle8.mods.galacticraft.api.transmission.core.item.IItemElectric;
-import micdoodle8.mods.galacticraft.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.core.entities.GCCoreEntityOxygenBubble;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;

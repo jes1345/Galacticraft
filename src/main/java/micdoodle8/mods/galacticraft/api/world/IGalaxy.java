@@ -1,6 +1,6 @@
 package micdoodle8.mods.galacticraft.api.world;
 
-import micdoodle8.mods.galacticraft.api.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 
 /**
  * Implement this one per set of planets (assuming only one galaxy in your mod)

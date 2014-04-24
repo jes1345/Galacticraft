@@ -1,6 +1,6 @@
 package micdoodle8.mods.galacticraft.core.tile;
 
-import micdoodle8.mods.galacticraft.api.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.core.blocks.GCCoreBlockOxygenDetector;
 import micdoodle8.mods.galacticraft.core.util.OxygenUtil;
 

@@ -1,6 +1,6 @@
 package micdoodle8.mods.galacticraft.mars.entities;
 
-import micdoodle8.mods.galacticraft.api.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.core.entities.ISizeable;
 import micdoodle8.mods.galacticraft.mars.tile.GCMarsTileEntityTerraformer;
 import net.minecraft.entity.Entity;

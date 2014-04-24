@@ -1,5 +1,6 @@
 package micdoodle8.mods.galacticraft.api.vector;
 
+import universalelectricity.api.vector.Vector3;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;

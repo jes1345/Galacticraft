@@ -16,7 +16,6 @@ import java.util.Set;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import micdoodle8.mods.galacticraft.api.GalacticraftRegistry;
-import micdoodle8.mods.galacticraft.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.api.world.ICelestialBody;
 import micdoodle8.mods.galacticraft.api.world.ICelestialBodyRenderer;
 import micdoodle8.mods.galacticraft.api.world.IMoon;
@@ -124,6 +123,7 @@ import org.w3c.dom.Document;
 
 import tconstruct.client.tabs.InventoryTabVanilla;
 import tconstruct.client.tabs.TabRegistry;
+import universalelectricity.api.vector.Vector3;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;

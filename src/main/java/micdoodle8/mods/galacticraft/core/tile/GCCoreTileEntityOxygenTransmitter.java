@@ -1,5 +1,6 @@
 package micdoodle8.mods.galacticraft.core.tile;
 
+import universalelectricity.api.vector.Vector3;
 import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasStack;
 import micdoodle8.mods.galacticraft.api.transmission.NetworkType;
@@ -9,7 +10,6 @@ import micdoodle8.mods.galacticraft.api.transmission.core.grid.IOxygenNetwork;
 import micdoodle8.mods.galacticraft.api.transmission.core.grid.OxygenNetwork;
 import micdoodle8.mods.galacticraft.api.transmission.tile.INetworkProvider;
 import micdoodle8.mods.galacticraft.api.transmission.tile.ITransmitter;
-import micdoodle8.mods.galacticraft.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.core.GCCoreAnnotations.RuntimeInterface;
 import micdoodle8.mods.galacticraft.core.util.WorldUtil;
 import net.minecraft.tileentity.TileEntity;

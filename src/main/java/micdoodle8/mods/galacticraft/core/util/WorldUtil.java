@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import universalelectricity.api.vector.Vector3;
 import mekanism.api.gas.IGasTransmitter;
 import mekanism.api.gas.ITubeConnection;
 import mekanism.api.transmitters.TransmissionType;
@@ -24,7 +25,6 @@ import micdoodle8.mods.galacticraft.api.recipe.SpaceStationRecipe;
 import micdoodle8.mods.galacticraft.api.transmission.NetworkType;
 import micdoodle8.mods.galacticraft.api.transmission.compatibility.NetworkConfigHandler;
 import micdoodle8.mods.galacticraft.api.transmission.tile.IConnector;
-import micdoodle8.mods.galacticraft.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.api.world.ICelestialBody;
 import micdoodle8.mods.galacticraft.api.world.IGalacticraftWorldProvider;
 import micdoodle8.mods.galacticraft.api.world.IMapObject;
@@ -607,7 +607,7 @@ public class WorldUtil
 			{
 				player = (GCCorePlayerMP) entity;
 				entity.setLocationAndAngles(type.getPlayerSpawnLocation((WorldServer) entity.worldObj, player).x, type.getPlayerSpawnLocation((WorldServer) entity.worldObj, player).y, type.getPlayerSpawnLocation((WorldServer) entity.worldObj, player).z, entity.rotationYaw, entity.rotationPitch);
-				micdoodle8.mods.galacticraft.api.vector.Vector3 spawnPos = type.getPlayerSpawnLocation((WorldServer) entity.worldObj, (EntityPlayerMP) entity);
+				universalelectricity.api.vector.Vector3 spawnPos = type.getPlayerSpawnLocation((WorldServer) entity.worldObj, (EntityPlayerMP) entity);
 				ChunkCoordIntPair pair = worldNew.getChunkFromChunkCoords(spawnPos.intX(), spawnPos.intZ()).getChunkCoordIntPair();
 				((WorldServer) worldNew).theChunkProviderServer.loadChunk(pair.chunkXPos, pair.chunkZPos);
 
@@ -731,7 +731,7 @@ public class WorldUtil
 
 		if (entity instanceof GCCorePlayerMP)
 		{
-			micdoodle8.mods.galacticraft.api.vector.Vector3 spawnPos = null;
+			universalelectricity.api.vector.Vector3 spawnPos = null;
 
 			if (player != null)
 			{

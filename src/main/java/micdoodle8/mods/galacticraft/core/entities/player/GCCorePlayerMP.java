@@ -106,7 +106,7 @@ public class GCCorePlayerMP extends EntityPlayerMP
 	private boolean hasOpenedPlanetSelectionGui = false;
 
 	private int chestSpawnCooldown;
-	private micdoodle8.mods.galacticraft.api.vector.Vector3 chestSpawnVector;
+	private universalelectricity.api.vector.Vector3 chestSpawnVector;
 
 	private int teleportCooldown;
 
@@ -1245,12 +1245,12 @@ public class GCCorePlayerMP extends EntityPlayerMP
 		this.chestSpawnCooldown = chestSpawnCooldown;
 	}
 
-	public micdoodle8.mods.galacticraft.api.vector.Vector3 getChestSpawnVector()
+	public universalelectricity.api.vector.Vector3 getChestSpawnVector()
 	{
 		return this.chestSpawnVector;
 	}
 
-	public void setChestSpawnVector(micdoodle8.mods.galacticraft.api.vector.Vector3 chestSpawnVector)
+	public void setChestSpawnVector(universalelectricity.api.vector.Vector3 chestSpawnVector)
 	{
 		this.chestSpawnVector = chestSpawnVector;
 	}

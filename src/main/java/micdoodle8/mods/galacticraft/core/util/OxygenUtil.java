@@ -2,9 +2,9 @@ package micdoodle8.mods.galacticraft.core.util;
 
 import java.util.List;
 
+import universalelectricity.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.api.item.IBreathableArmor;
 import micdoodle8.mods.galacticraft.api.item.IBreathableArmor.EnumGearType;
-import micdoodle8.mods.galacticraft.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.core.blocks.GCCoreBlocks;
 import micdoodle8.mods.galacticraft.core.entities.player.GCCorePlayerMP;
 import micdoodle8.mods.galacticraft.core.items.GCCoreItemOxygenGear;

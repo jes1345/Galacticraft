@@ -3,10 +3,10 @@ package micdoodle8.mods.galacticraft.mars.tile;
 import java.util.ArrayList;
 import java.util.List;
 
+import universalelectricity.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.api.block.ITerraformableBlock;
 import micdoodle8.mods.galacticraft.api.tile.IDisableableMachine;
 import micdoodle8.mods.galacticraft.api.transmission.core.item.IItemElectric;
-import micdoodle8.mods.galacticraft.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.core.GCCoreAnnotations.NetworkedField;
 import micdoodle8.mods.galacticraft.core.tile.GCCoreTileEntityElectricBlock;
 import micdoodle8.mods.galacticraft.mars.entities.GCMarsEntityTerraformBubble;

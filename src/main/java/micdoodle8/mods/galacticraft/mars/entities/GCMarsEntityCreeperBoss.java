@@ -3,9 +3,9 @@ package micdoodle8.mods.galacticraft.mars.entities;
 import java.util.List;
 import java.util.Random;
 
+import universalelectricity.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.api.GalacticraftRegistry;
 import micdoodle8.mods.galacticraft.api.entity.IEntityBreathable;
-import micdoodle8.mods.galacticraft.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.core.GCCoreConfigManager;
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.entities.GCCoreEntityAIArrowAttack;

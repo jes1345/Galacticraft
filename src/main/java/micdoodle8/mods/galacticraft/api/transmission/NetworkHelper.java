@@ -4,11 +4,11 @@ import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 
+import universalelectricity.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.api.transmission.core.grid.IElectricityNetwork;
 import micdoodle8.mods.galacticraft.api.transmission.core.grid.IOxygenNetwork;
 import micdoodle8.mods.galacticraft.api.transmission.tile.IConnector;
 import micdoodle8.mods.galacticraft.api.transmission.tile.INetworkProvider;
-import micdoodle8.mods.galacticraft.api.vector.Vector3;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 
